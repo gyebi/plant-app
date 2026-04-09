@@ -1,3 +1,5 @@
+import "../css/PlantCard.css";
+
 function PlantCard({ plant }) {
 
     function onFavoriteClick(){

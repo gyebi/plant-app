@@ -1,5 +1,6 @@
 import PlantCard from "../components/PlantCard"
 import { useState } from "react";
+import "../css/Home.css";
 
 
 

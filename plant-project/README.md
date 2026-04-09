@@ -51,7 +51,7 @@ npm run preview
 - `src/components/PlantCard.jsx` displays one plant.
 - `src/pages/Home.jsx` stores the plant data, search state, and plant grid.
 - `src/pages/Favorites.jsx` displays the empty favorites message.
-- `src/App.css` contains the app layout and component styles.
+- `src/css/` contains the app, component, and page styles.
 - `src/index.css` contains global theme styles.
 
 ## Learning Notes

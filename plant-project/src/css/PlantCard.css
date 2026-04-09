@@ -1,0 +1,68 @@
+.plant-card {
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.plant-image {
+  position: relative;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+}
+
+.plant-image img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: linear-gradient(135deg, #dcead4, #7fa66a);
+  border-bottom: 1px solid var(--border);
+}
+
+.plant-image h3 {
+  display: inline-flex;
+  align-self: flex-start;
+  margin: 18px 18px 8px;
+  padding: 4px 10px;
+  color: var(--leaf-dark);
+  background: var(--leaf-soft);
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.plant-image h2 {
+  margin: 0 18px 10px;
+  color: var(--text-h);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.plant-image p {
+  margin: 0 18px 18px;
+  color: var(--text);
+}
+
+.plant-actions {
+  margin-top: auto;
+  padding: 0 18px 18px;
+}
+
+.favorite-btn {
+  width: 42px;
+  height: 42px;
+  color: #FFFFFF;
+  background: #fff3ed;
+  border: 1px solid #0a0a0a;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.favorite-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
