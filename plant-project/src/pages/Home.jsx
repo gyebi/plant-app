@@ -1,5 +1,6 @@
 import PlantCard from "../components/PlantCard"
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { searchPlants, fetchPlants } from "../../services/api";
 import "../css/Home.css";
 
 
@@ -7,39 +8,56 @@ import "../css/Home.css";
 function Home() {
 
     const [searchQuery, setSearchQuery] = useState("");
+    const [plants, setPlants] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    const plants = [
-        {id: 1,
-        name: "Monstera Deliciosa",
-        image: "https://example.com/monstera.jpg",
-        description: "A popular houseplant with large, glossy leaves and unique holes.",
-        care: "Thrives in bright, indirect light and requires moderate watering."
-        },
-        {id: 2,
-        name: "Fiddle Leaf Fig",
-        image: "https://example.com/fiddleleaf.jpg",
-        description: "A trendy indoor plant with large, violin-shaped leaves.",
-        care: "Prefers bright, indirect light and needs consistent watering."
-        },
-        {id: 3,
-        name: "Snake Plant",
-        image: "https://example.com/snakeplant.jpg",
-        description: "A hardy plant with upright, sword-like leaves that can tolerate low light.",
-        care: "Thrives in low to bright light and requires infrequent watering."
+    useEffect(() => {
+        const loadPopularPlants = async ()=>{
+            setLoading(true);
+            setError("");
+
+            try {
+                const popularPlants = await fetchPlants()
+                setPlants(popularPlants) 
+            }catch (err){
+                console.log(err)
+                setError("Failed to retrieve plant list")
+            }
+            finally {
+                setLoading(false)
+            }
+
         }
-    ]
+        loadPopularPlants()
+    }, [])
 
-    const handleSearch = (e) =>{
+    const handleSearch = async (e) =>{
         e.preventDefault();
-        alert(searchQuery);
-        setSearchQuery("");
+
+        setLoading(true);
+        setError("");
+
+        try {
+            const trimmedQuery = searchQuery.trim();
+            const plantResults = trimmedQuery
+                ? await searchPlants(trimmedQuery)
+                : await fetchPlants();
+
+            setPlants(plantResults);
+        } catch (err) {
+            console.log(err);
+            setError("Failed to search plants");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className = "home">
             <form onSubmit= {handleSearch} className= "search-form">
                 <input 
-                text ="text"
+                type ="text"
                 placeholder = "Enter Plant Name here"
                 className = "search-input"
                 value = {searchQuery}
@@ -48,11 +66,15 @@ function Home() {
                 <button type = "submit" className = "search-button">Search </button>
             </form>
 
+            {loading && <p>Loading plants...</p>}
+            {error && <p>{error}</p>}
+            {!loading && !error && plants.length === 0 && <p>No plants found.</p>}
+
             <div className = "plant-grid">
                 {plants.map(
                     
                     (plant)=> (
-                        plant.name.toLowerCase().startsWith(searchQuery) && (
+                        plant?.common_name?.toLowerCase().startsWith(searchQuery.trim().toLowerCase()) && (
                             <PlantCard plant={plant} key={plant.id} />
                 )
                 ))}          

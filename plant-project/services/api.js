@@ -1,27 +1,36 @@
-const API_KEY = "usr-Wn_2iiuEwDefBAL39qyrQUoUK4NLvm272z26-rwM_X8"
-const BASE_URL_SEARCH = "https://trefle.io/api/v1/plants/search?token=YOUR_TREFLE_TOKEN&q=coconut"
-const BASE_URL = "https://trefle.io/api/v1/plants?token=YOUR_TREFLE_TOKEN";
+const API_KEY = import.meta.env.VITE_TREFLE_API_KEY;
+const BASE_URL = "/api/trefle/api/v1/plants"
+const SEARCH_URL = "/api/trefle/api/v1/plants/search"
 
+const getPlantsFromResponse = (payload) => {
+  if (Array.isArray(payload?.data)) {
+    return payload.data;
+  }
 
-
-
-export const fetchPlants = async () => {
-  const response = await fetch(
-`${BASE_URL}token=${API_KEY}`
-);
-  const data = await response.json();
-  console.log(data);
-  return data.results 
+  return [];
 };
 
+const fetchFromApi = async (url) => {
+  if (!API_KEY) {
+    throw new Error("Missing VITE_TREFLE_API_KEY in your environment.");
+  }
 
+  const response = await fetch(url);
 
-export const searchPlants = async (query) => {
-  const response = await fetch(
-    `${BASE_URL_SEARCH}/search?token=${API_KEY}&q=${encodeURIComponent(query)}`
-  );
+  if (!response.ok) {
+    throw new Error(`API request failed with status ${response.status}`);
+  }
 
   const data = await response.json();
-  console.log(data);
-    return data.results ; // Assuming the API returns an array of plants in the 'data' field
+  return getPlantsFromResponse(data);
+};
+
+export const fetchPlants = async () => {
+  const url = `${BASE_URL}?token=${API_KEY}`;
+  return fetchFromApi(url);
+};
+
+export const searchPlants = async (query) => {
+  const url = `${SEARCH_URL}?token=${API_KEY}&q=${encodeURIComponent(query)}`;
+  return fetchFromApi(url);
 };
